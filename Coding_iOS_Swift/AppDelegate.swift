@@ -9,6 +9,13 @@
 import UIKit
 import CoreData
 
+
+import SDWebImage
+import AFNetworking
+
+
+
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -17,8 +24,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        
+        self.window = UIWindow(frame:UIScreen.mainScreen().bounds)
+        self.window?.backgroundColor = UIColor.whiteColor()
+        
+        
+        //网络
+        AFNetworkActivityIndicatorManager.sharedManager().enabled = true
+        AFNetworkReachabilityManager.sharedManager().startMonitoring()
+        
+        //sd加载的数据类型
+        SDWebImageManager.sharedManager().imageDownloader.setValue("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8", forHTTPHeaderField: "Accept")
+        
+        //设置导航条样式
+        self.customizeInterface()
+        
+        
+        
         return true
     }
+    
+    
+    func customizeInterface(){
+        //设置Nav的背景色和title色
+        
+        let navigationBarAppearance = UINavigationBar.appearance()
+        navigationBarAppearance.setBackgroundImage(UIImage.imageWithColor(UIColor.colorwith), forBarMetrics: <#T##UIBarMetrics#>)
+        
+        
+        
+    }
+    
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
