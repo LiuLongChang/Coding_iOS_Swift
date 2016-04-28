@@ -39,20 +39,63 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //设置导航条样式
         self.customizeInterface()
+        UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: UIStatusBarAnimation.Fade)
+        
+        //UIWebView的 User-Agent
+        self.registerUserAgent()
+        
+        
+        
         
         
         
         return true
     }
     
+    //mark UserAgent
+    func registerUserAgent(){
+        var systemInfo =  utsname()
+        uname(&systemInfo)
+        let deviceString = UIDevice.currentDevice().modelName
+        
+        
+        let dic = NSBundle.mainBundle().infoDictionary
+        let exeKey = dic![String(kCFBundleExecutableKey)] as? String
+        let idenKey = dic![String(kCFBundleIdentifierKey)] as? String
+        let verKey = CFBundleGetValueForInfoDictionaryKey(CFBundleGetMainBundle(), kCFBundleVersionKey) as? String
+        let cgVerKey = dic![String(kCFBundleVersionKey)] as? String
+        
+        
+        let  sysVer = UIDevice.currentDevice().systemVersion
+        let sel : Selector = #selector(NSDecimalNumberBehaviors.scale)
+        let isScale = UIScreen.mainScreen().respondsToSelector(sel) ? UIScreen.mainScreen().scale : 1.0
+        let str1 = (exeKey != nil) ? "" : idenKey
+        let str2 = (verKey != nil) ? "" : cgVerKey
+        let userAgent = String(format: "%@/%@ (%@; iOS %@; Scale/%0.2f)",str1!,str2!,deviceString,sysVer,isScale)
+        
+        let dictionary = ["UserAgent":userAgent]
+        NSUserDefaults.standardUserDefaults().registerDefaults(dictionary)
+    }
+    
+    
     
     func customizeInterface(){
         //设置Nav的背景色和title色
         
-        let navigationBarAppearance = UINavigationBar.appearance()
-        navigationBarAppearance.setBackgroundImage(UIImage.imageWithColor(UIColor.colorwith), forBarMetrics: <#T##UIBarMetrics#>)
+        let navigationBarAppearance : UINavigationBar = UINavigationBar.appearance()
+        navigationBarAppearance.setBackgroundImage(UIImage.imageWithColor(UIColor.colorWithHexString("0x28303b")!), forBarMetrics: UIBarMetrics.Default)
+        
+        navigationBarAppearance.tintColor = UIColor.whiteColor()
         
         
+        
+        let textAttributes  = [NSFontAttributeName:UIFont.boldSystemFontOfSize(kNavTitleFontSize),NSForegroundColorAttributeName:UIColor.whiteColor()]
+        navigationBarAppearance.titleTextAttributes = textAttributes
+        
+        
+        UITextField.appearance().tintColor = UIColor.colorWithHexString("0x3bbc79") //设置UITextField的光标颜色
+        UITextView.appearance().tintColor = UIColor.colorWithHexString("0x3bbc79") //设置UITextView的光标颜色
+        (UISearchBar.appearance()).setBackgroundImage(UIImage.imageWithColor(kColorTableSectionBg!), forBarPosition: UIBarPosition.Any, barMetrics: UIBarMetrics.Default)
         
     }
     
